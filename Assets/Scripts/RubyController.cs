@@ -48,7 +48,7 @@ public class RubyController : MonoBehaviour
         Move();
     }
 
-    public void ChangeHelth(int amount)
+    public void ChangeHealth(int amount)
     {
         if (amount < 0)
         {

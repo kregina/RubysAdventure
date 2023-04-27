@@ -10,7 +10,7 @@ public class DamageZone : MonoBehaviour
 
         if (controller != null)
         {
-            controller.ChangeHelth(-1);
+            controller.ChangeHealth(-1);
         }
     }
 }
