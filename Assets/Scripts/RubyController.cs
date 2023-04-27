@@ -4,26 +4,38 @@ using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
-    private float speed = 3.0f;
+    private float distance = 3.0f;
+    private float horizontal;
+    private float vertical;
+    private Rigidbody2D rigidbody2d;
 
     void Start()
     {
-
+        rigidbody2d = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        Move();
+        GetInputs();
+    }
+
+    private void FixedUpdate()
+    {
+        Move();        
     }
 
     private void Move()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        Vector2 position = rigidbody2d.position;
+        position.x = position.x + distance * horizontal * Time.deltaTime;
+        position.y = position.y + distance * vertical * Time.deltaTime;
 
-        Vector2 position = transform.position;
-        position.x = position.x + speed * horizontal * Time.deltaTime;
-        position.y = position.y + speed * vertical * Time.deltaTime;
-        transform.position = position;
+        rigidbody2d.MovePosition(position);
+    }
+
+    private void GetInputs()
+    {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
     }
 }
