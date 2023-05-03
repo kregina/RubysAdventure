@@ -17,7 +17,7 @@ public class RubyController : MonoBehaviour
     private float invincibleTimer;
     private float horizontal;
     private float vertical;
-    private float displayTime = 4.0f;
+    private float displayTime = 6.0f;
     private float timerDisplay;
 
     private Rigidbody2D rigidbody2d;
