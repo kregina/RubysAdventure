@@ -10,13 +10,17 @@ public class RubyController : MonoBehaviour
     public float timeInvincible = 2.0f;
     public GameObject projectilePrefab;
     public GameObject dialogBox;
+    public float fadeDuration = 1f;
+    public float displayImageDuration = 1f;
+    public CanvasGroup exitBackgroundImageCanvasGroup;
 
+    private int currentHealth;
     private bool canShoot;
     private bool isInvincible;
-    private int currentHealth;
     private float invincibleTimer;
     private float horizontal;
     private float vertical;
+    private float m_Timer;
 
     private Rigidbody2D rigidbody2d;
     private Animator animator;
@@ -43,6 +47,11 @@ public class RubyController : MonoBehaviour
         Invisibility();
         Shoot();
         Talk();
+
+        if (currentHealth == 0)
+        {
+            EndLevel();
+        }
     }
 
     private void Talk()
@@ -154,6 +163,17 @@ public class RubyController : MonoBehaviour
         {
             dialogBox.SetActive(false);
             Destroy(collision.gameObject);
+        }
+    }
+
+    void EndLevel()
+    {
+        m_Timer += Time.deltaTime;
+        exitBackgroundImageCanvasGroup.alpha = m_Timer / fadeDuration;
+
+        if (m_Timer > fadeDuration + displayImageDuration)
+        {
+            Application.Quit();
         }
     }
 }

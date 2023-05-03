@@ -527,7 +527,7 @@ MonoBehaviour:
   speed: 3
   vertical: 1
   changeTime: 3
-  amountOfLife: 3
+  maxLife: 3
 --- !u!95 &7129278122726851329
 Animator:
   serializedVersion: 3
