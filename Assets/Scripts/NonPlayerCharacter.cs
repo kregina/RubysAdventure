@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class NonPlayerCharacter : MonoBehaviour
 {
-    public float displayTime = 5.0f;
+    public float displayTime = 4.0f;
     public GameObject dialogBox;
+    public GameObject tutorialBox;
     float timerDisplay;
 
     void Start()
@@ -24,11 +25,13 @@ public class NonPlayerCharacter : MonoBehaviour
                 dialogBox.SetActive(false);
             }
         }
+
     }
 
     public void DisplayDialog()
     {
         timerDisplay = displayTime;
         dialogBox.SetActive(true);
+        tutorialBox.SetActive(false);
     }
 }
