@@ -7,8 +7,9 @@ public class RubyController : MonoBehaviour
     public float speed = 3.0f;
     public int maxHealth = 5;
     public int health { get { return currentHealth; } }
-    public GameObject projectilePrefab;
     public float timeInvincible = 2.0f;
+    public GameObject projectilePrefab;
+    public GameObject dialogBox;
 
     private bool canShoot;
     private bool isInvincible;
@@ -16,6 +17,8 @@ public class RubyController : MonoBehaviour
     private float invincibleTimer;
     private float horizontal;
     private float vertical;
+    private float displayTime = 4.0f;
+    private float timerDisplay;
 
     private Rigidbody2D rigidbody2d;
     private Animator animator;
@@ -33,6 +36,7 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         currentHealth = maxHealth;
+        timerDisplay = displayTime;
     }
 
     // Update is called once per frame
@@ -40,11 +44,24 @@ public class RubyController : MonoBehaviour
     {
         Move();
         Invisibility();
-        HandleKeyC();
-        HandleKeyX();
+        Shoot();
+        Talk();
+        HideDialog();
     }
 
-    private void HandleKeyX()
+    private void HideDialog()
+    {
+        timerDisplay -= Time.deltaTime;
+
+        if (timerDisplay < 0)
+        {
+            dialogBox.SetActive(false);
+            return;
+        }
+
+    }
+
+    private void Talk()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -66,9 +83,9 @@ public class RubyController : MonoBehaviour
         }
     }
 
-    private void HandleKeyC()
+    private void Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (canShoot)
             {
