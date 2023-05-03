@@ -17,8 +17,6 @@ public class RubyController : MonoBehaviour
     private float invincibleTimer;
     private float horizontal;
     private float vertical;
-    private float displayTime = 4.0f;
-    private float timerDisplay;
 
     private Rigidbody2D rigidbody2d;
     private Animator animator;
@@ -36,7 +34,6 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         currentHealth = maxHealth;
-        timerDisplay = displayTime;
     }
 
     // Update is called once per frame
@@ -46,19 +43,6 @@ public class RubyController : MonoBehaviour
         Invisibility();
         Shoot();
         Talk();
-        HideDialog();
-    }
-
-    private void HideDialog()
-    {
-        timerDisplay -= Time.deltaTime;
-
-        if (timerDisplay < 0)
-        {
-            dialogBox.SetActive(false);
-            return;
-        }
-
     }
 
     private void Talk()
@@ -106,6 +90,7 @@ public class RubyController : MonoBehaviour
 
     private void Move()
     {
+
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
 
@@ -161,5 +146,14 @@ public class RubyController : MonoBehaviour
         projectile.Launch(lookDirection, 300);
 
         animator.SetTrigger("Launch");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("TutorialMove"))
+        {
+            dialogBox.SetActive(false);
+            Destroy(collision.gameObject);
+        }
     }
 }

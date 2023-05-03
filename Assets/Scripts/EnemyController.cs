@@ -1,20 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
+    public ParticleSystem smokeEffect;
+    public Slider lifeSlider;
     public float speed;
     public bool vertical;
     public float changeTime = 3.0f;
-    public ParticleSystem smokeEffect;
+    public int maxLife;
 
-    Rigidbody2D rigidbody2d;
-    float timer;
-    int direction = 1;
-    bool broken = true;
+    private int currentDamaged = 0;
+    private Rigidbody2D rigidbody2d;
+    private float timer;
+    private int direction = 1;
+    private bool broken = true;
 
-    Animator animator;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -22,11 +26,14 @@ public class EnemyController : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         timer = changeTime;
         animator = GetComponent<Animator>();
+
+        lifeSlider.value = maxLife;
+        lifeSlider.maxValue = maxLife;
+        currentDamaged = maxLife;
     }
 
     void Update()
     {
-        //remember ! inverse the test, so if broken is true !broken will be false and return won’t be executed.
         if (!broken)
         {
             return;
@@ -43,7 +50,6 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //remember ! inverse the test, so if broken is true !broken will be false and return won’t be executed.
         if (!broken)
         {
             return;
@@ -51,6 +57,11 @@ public class EnemyController : MonoBehaviour
 
         Vector2 position = rigidbody2d.position;
 
+        Move(position);
+    }
+
+    private void Move(Vector2 position)
+    {
         if (vertical)
         {
             position.y = position.y + Time.deltaTime * speed * direction;
@@ -77,13 +88,17 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    //Public because we want to call it from elsewhere like the projectile script
-    public void Fix()
+    public void Fix(int damage)
     {
-        broken = false;
-        rigidbody2d.simulated = false;
-        //optional if you added the fixed animation
-        animator.SetTrigger("Fixed");
-        smokeEffect.Stop();
+        currentDamaged -= damage;
+        lifeSlider.value = currentDamaged;
+        if (currentDamaged <= maxLife)
+        {
+            lifeSlider.fillRect.gameObject.SetActive(true);
+            broken = false;
+            rigidbody2d.simulated = false;
+            animator.SetTrigger("Fixed");
+            smokeEffect.Stop();
+        }
     }
 }
