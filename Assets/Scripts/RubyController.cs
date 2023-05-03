@@ -5,27 +5,29 @@ using UnityEngine;
 public class RubyController : MonoBehaviour
 {
     public float speed = 3.0f;
-
     public int maxHealth = 5;
-
-    public GameObject projectilePrefab;
-
     public int health { get { return currentHealth; } }
-    int currentHealth;
-
+    public GameObject projectilePrefab;
     public float timeInvincible = 2.0f;
-    bool isInvincible;
-    float invincibleTimer;
 
-    Rigidbody2D rigidbody2d;
-    float horizontal;
-    float vertical;
+    private bool canShoot;
+    private bool isInvincible;
+    private int currentHealth;
+    private float invincibleTimer;
+    private float horizontal;
+    private float vertical;
 
-    Animator animator;
-    Vector2 lookDirection = new Vector2(1, 0);
+    private Rigidbody2D rigidbody2d;
+    private Animator animator;
+    private Vector2 lookDirection = new Vector2(1, 0);
 
     // Start is called before the first frame update
     void Start()
+    {
+        Init();
+    }
+
+    private void Init()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -35,6 +37,57 @@ public class RubyController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        Move();
+        Invisibility();
+        HandleKeyC();
+        HandleKeyX();
+    }
+
+    private void HandleKeyX()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            HandleNpcDialog();
+        }
+    }
+
+    private void HandleNpcDialog()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+        if (hit.collider != null)
+        {
+            NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
+            if (character != null)
+            {
+                character.DisplayDialog();
+                canShoot = true;
+            }
+        }
+    }
+
+    private void HandleKeyC()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (canShoot)
+            {
+                Launch();
+            }
+        }
+    }
+
+    private void Invisibility()
+    {
+        if (isInvincible)
+        {
+            invincibleTimer -= Time.deltaTime;
+            if (invincibleTimer < 0)
+                isInvincible = false;
+        }
+    }
+
+    private void Move()
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
@@ -50,34 +103,14 @@ public class RubyController : MonoBehaviour
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
-
-        if (isInvincible)
-        {
-            invincibleTimer -= Time.deltaTime;
-            if (invincibleTimer < 0)
-                isInvincible = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Launch();
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
-            if (hit.collider != null)
-            {
-                NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
-                if (character != null)
-                {
-                    character.DisplayDialog();
-                }
-            }
-        }
     }
 
     void FixedUpdate()
+    {
+        CalcPosition();
+    }
+
+    private void CalcPosition()
     {
         Vector2 position = rigidbody2d.position;
         position.x = position.x + speed * horizontal * Time.deltaTime;
