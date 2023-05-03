@@ -26,7 +26,14 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        RubyController player = other.collider.GetComponent<RubyController>();
         EnemyController e = other.collider.GetComponent<EnemyController>();
+
+        if (player)
+        {
+            return;
+        }
+
         if (e != null)
         {
             e.Fix();
