@@ -102,7 +102,7 @@ public class RubyController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (canShoot)
+            if (canShoot && _gameState.AmmoCount > 0)
             {
                 _gameState.AmmoCount--;
                 Launch();
