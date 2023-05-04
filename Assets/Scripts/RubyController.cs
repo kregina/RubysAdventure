@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
 public class RubyController : MonoBehaviour
 {
     public float speed = 3.0f;
@@ -13,6 +15,8 @@ public class RubyController : MonoBehaviour
     public float fadeDuration = 1f;
     public float displayImageDuration = 1f;
     public CanvasGroup exitBackgroundImageCanvasGroup;
+    public Image uiAmmoImage;
+
 
     private int currentHealth;
     private bool canShoot;
@@ -23,6 +27,7 @@ public class RubyController : MonoBehaviour
     private float vertical;
     private float m_Timer;
 
+    private GameState _gameState;
     private Rigidbody2D rigidbody2d;
     private Animator animator;
     private Vector2 lookDirection = new Vector2(1, 0);
@@ -37,6 +42,7 @@ public class RubyController : MonoBehaviour
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        _gameState = FindObjectOfType<GameState>();
 
         currentHealth = maxHealth;
     }
@@ -76,6 +82,7 @@ public class RubyController : MonoBehaviour
             {
                 character.DisplayDialog();
                 canShoot = true;
+                uiAmmoImage.gameObject.SetActive(true);
             }
         }
     }
@@ -86,6 +93,7 @@ public class RubyController : MonoBehaviour
         {
             if (canShoot)
             {
+                _gameState.AmmoCount--;
                 Launch();
             }
         }
