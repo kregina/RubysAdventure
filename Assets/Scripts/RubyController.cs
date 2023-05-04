@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class RubyController : MonoBehaviour
 {
     public float speed = 3.0f;
@@ -17,6 +17,7 @@ public class RubyController : MonoBehaviour
     private int currentHealth;
     private bool canShoot;
     private bool isInvincible;
+    private bool isAlive = true;
     private float invincibleTimer;
     private float horizontal;
     private float vertical;
@@ -43,7 +44,10 @@ public class RubyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if (isAlive)
+        {
+            Move();
+        }
         Invisibility();
         Shoot();
         Talk();
@@ -168,12 +172,17 @@ public class RubyController : MonoBehaviour
 
     void EndLevel()
     {
+        isAlive = false;
         m_Timer += Time.deltaTime;
         exitBackgroundImageCanvasGroup.alpha = m_Timer / fadeDuration;
+        float rotationSpeed = 1.0f;
+        float rotationAngle = -90f;
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, rotationAngle), rotationSpeed * Time.deltaTime);
 
         if (m_Timer > fadeDuration + displayImageDuration)
         {
-            Application.Quit();
+            SceneManager.LoadScene(0);
         }
     }
 }
