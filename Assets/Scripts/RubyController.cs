@@ -16,7 +16,7 @@ public class RubyController : MonoBehaviour
     public float displayImageDuration = 1f;
     public CanvasGroup exitBackgroundImageCanvasGroup;
     public Image uiAmmoImage;
-
+    public GameObject[] ammoPrefabs;
 
     private int currentHealth;
     private bool canShoot;
@@ -45,6 +45,7 @@ public class RubyController : MonoBehaviour
         _gameState = FindObjectOfType<GameState>();
 
         currentHealth = maxHealth;
+        ToogleAmmoBagVisibility(false);
     }
 
     // Update is called once per frame
@@ -82,8 +83,18 @@ public class RubyController : MonoBehaviour
             {
                 character.DisplayDialog();
                 canShoot = true;
+
                 uiAmmoImage.gameObject.SetActive(true);
+                ToogleAmmoBagVisibility(true);
             }
+        }
+    }
+
+    private void ToogleAmmoBagVisibility(bool visibility)
+    {
+        foreach (var item in ammoPrefabs)
+        {
+            item.SetActive(visibility);
         }
     }
 

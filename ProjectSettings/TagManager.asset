@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - TutorialMove
+  - AmmoBag
   layers:
   - Default
   - TransparentFX
