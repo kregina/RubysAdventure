@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     public float changeTime = 3.0f;
     public int maxLife;
 
-    private int currentDamaged = 0;
+    private int remainingLife = 0;
     private Rigidbody2D rigidbody2d;
     private float timer;
     private int direction = 1;
@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour
 
         lifeSlider.value = maxLife;
         lifeSlider.maxValue = maxLife;
-        currentDamaged = maxLife;
+        remainingLife = maxLife;
     }
 
     void Update()
@@ -90,11 +90,12 @@ public class EnemyController : MonoBehaviour
 
     public void Fix(int damage)
     {
-        currentDamaged -= damage;
-        lifeSlider.value = currentDamaged;
-        if (currentDamaged <= maxLife)
+        remainingLife -= damage;
+        lifeSlider.value = remainingLife;
+
+        if (remainingLife == 0)
         {
-            lifeSlider.fillRect.gameObject.SetActive(true);
+            lifeSlider.gameObject.SetActive(false);
             broken = false;
             rigidbody2d.simulated = false;
             animator.SetTrigger("Fixed");
