@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 public class RubyController : MonoBehaviour
 {
     public float speed = 3.0f;
-    public int maxHealth = 5;
-    public int health { get { return currentHealth; } }
     public float timeInvincible = 2.0f;
     public GameObject projectilePrefab;
     public GameObject dialogBox;
@@ -18,7 +16,6 @@ public class RubyController : MonoBehaviour
     public Image uiAmmoImage;
     public GameObject[] ammoPrefabs;
 
-    private int currentHealth;
     private bool canShoot;
     private bool isInvincible;
     private bool isAlive = true;
@@ -44,7 +41,6 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
         _gameState = FindObjectOfType<GameState>();
 
-        currentHealth = maxHealth;
         ToogleAmmoBagVisibility(false);
     }
 
@@ -59,7 +55,7 @@ public class RubyController : MonoBehaviour
         Shoot();
         Talk();
 
-        if (currentHealth == 0)
+        if (_gameState.health == 0)
         {
             EndLevel();
         }
@@ -166,8 +162,8 @@ public class RubyController : MonoBehaviour
             invincibleTimer = timeInvincible;
         }
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
+        _gameState.health = Mathf.Clamp(_gameState.health + amount, 0, _gameState.maxHealth);
+        _gameState.ChangeHealthValue(_gameState.health / (float)_gameState.maxHealth);
     }
 
     void Launch()
