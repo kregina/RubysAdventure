@@ -12,6 +12,7 @@ public class GameState : MonoBehaviour
 
     public int health;
     public int maxHealth = 5;
+    public bool canShoot;
 
     private int _ammoCount = 0;
     private float originalSize;
@@ -35,6 +36,7 @@ public class GameState : MonoBehaviour
     {
         originalSize = healthBarMask.rectTransform.rect.width;
         health = maxHealth;
+        canShoot = false;
     }
 
     public void ChangeHealthValue(float value)

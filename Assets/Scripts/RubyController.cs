@@ -16,7 +16,6 @@ public class RubyController : MonoBehaviour
     public Image uiAmmoImage;
     public GameObject[] ammoPrefabs;
 
-    private bool canShoot;
     private bool isInvincible;
     private bool isAlive = true;
     private float invincibleTimer;
@@ -40,8 +39,6 @@ public class RubyController : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         _gameState = FindObjectOfType<GameState>();
-
-        ToogleAmmoBagVisibility(false);
     }
 
     // Update is called once per frame
@@ -54,10 +51,26 @@ public class RubyController : MonoBehaviour
         Invisibility();
         Shoot();
         Talk();
+        CallToogleAmmoBagVisibility();
+
+        // this cannot be here, it'll look for this since the game start
+        HandleFactoryEnter();
 
         if (_gameState.health == 0)
         {
             EndLevel();
+        }
+    }
+
+    void CallToogleAmmoBagVisibility()
+    {
+        if (_gameState.canShoot)
+        {
+            ToogleAmmoBagVisibility(true);
+        }
+        else
+        {
+            ToogleAmmoBagVisibility(false);
         }
     }
 
@@ -66,6 +79,18 @@ public class RubyController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             HandleNpcDialog();
+        }
+    }
+
+    private void HandleFactoryEnter()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("Factory"));
+        if (hit.collider != null)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                SceneManager.LoadScene(2);
+            }
         }
     }
 
@@ -78,10 +103,9 @@ public class RubyController : MonoBehaviour
             if (character != null)
             {
                 character.DisplayDialog();
-                canShoot = true;
+                _gameState.canShoot = true;
 
                 uiAmmoImage.gameObject.SetActive(true);
-                ToogleAmmoBagVisibility(true);
             }
         }
     }
@@ -90,7 +114,10 @@ public class RubyController : MonoBehaviour
     {
         foreach (var item in ammoPrefabs)
         {
-            item.SetActive(visibility);
+            if(item)
+            {
+                item.SetActive(visibility);
+            }
         }
     }
 
@@ -98,7 +125,7 @@ public class RubyController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (canShoot && _gameState.AmmoCount > 0)
+            if (_gameState.canShoot && _gameState.AmmoCount > 0)
             {
                 _gameState.AmmoCount--;
                 Launch();
