@@ -253,6 +253,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   shootClip: {fileID: 8300000, guid: b2edfd40873655249ba0e01a5cf705be, type: 3}
+  hitSound: {fileID: 8300000, guid: ae904c7305df7344d86b2092c0cb3a26, type: 3}
 --- !u!50 &3212024844288270898
 Rigidbody2D:
   serializedVersion: 4

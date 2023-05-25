@@ -16,6 +16,7 @@ public class RubyController : MonoBehaviour
     public Image uiAmmoImage;
     public GameObject[] ammoPrefabs;
     public AudioClip shootClip;
+    public AudioClip hitSound;
 
     private bool isInvincible;
     private bool isAlive = true;
@@ -208,6 +209,7 @@ public class RubyController : MonoBehaviour
 
             isInvincible = true;
             invincibleTimer = timeInvincible;
+            PlaySound(hitSound);
         }
 
         _gameState.health = Mathf.Clamp(_gameState.health + amount, 0, _gameState.maxHealth);
