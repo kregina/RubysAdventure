@@ -15,6 +15,7 @@ public class RubyController : MonoBehaviour
     public CanvasGroup exitBackgroundImageCanvasGroup;
     public Image uiAmmoImage;
     public GameObject[] ammoPrefabs;
+    public AudioClip shootClip;
 
     private bool isInvincible;
     private bool isAlive = true;
@@ -27,6 +28,7 @@ public class RubyController : MonoBehaviour
     private Rigidbody2D rigidbody2d;
     private Animator animator;
     private Vector2 lookDirection = new Vector2(1, 0);
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class RubyController : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         _gameState = FindObjectOfType<GameState>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -129,6 +132,7 @@ public class RubyController : MonoBehaviour
             {
                 _gameState.AmmoCount--;
                 Launch();
+                audioSource.PlayOneShot(shootClip);
             }
         }
     }
@@ -160,6 +164,23 @@ public class RubyController : MonoBehaviour
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
+
+        if (horizontal != 0 || vertical != 0)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop();
+        }
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 
     void FixedUpdate()

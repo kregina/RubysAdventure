@@ -5,6 +5,7 @@ using UnityEngine;
 public class AmmoCollectable : MonoBehaviour
 {
     private GameState _gameState;
+    public AudioClip collectedClip;
 
     private void Start()
     {
@@ -19,6 +20,8 @@ public class AmmoCollectable : MonoBehaviour
         {
             _gameState.AmmoCount += 5;
             Destroy(gameObject);
+
+            controller.PlaySound(collectedClip);
         }
     }
 }
